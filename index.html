@@ -469,13 +469,13 @@
   <section id="tune">
     <div class="card">
       <h2>Tune</h2>
-      <p class="muted">Upload your own tune (MP3 / WAV) and write a short description about the song.</p>
+      <p class="muted">Upload your own tune (MP3 / WAV). It will be saved in this browser so anyone opening this portfolio on this device can listen.</p>
 
       <div class="tune-item">
         <div>
           <label for="audioInput"><i class="fa-solid fa-music"></i> Select your song file</label>
           <input type="file" id="audioInput" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/wave" />
-          <div class="tune-helper">Supported formats: MP3, WAV</div>
+          <div class="tune-helper">Supported formats: MP3, WAV. File is stored in browser storage (localStorage).</div>
           <div id="audioFileName"></div>
         </div>
 
@@ -609,7 +609,7 @@ function revealOverlayButtons(){
   deleteBtn.style.display = 'inline-flex';
 }
 
-/* Upload flow */
+/* Upload profile image */
 uploadBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   fileInput.click();
@@ -873,11 +873,47 @@ uploadBtn.addEventListener('keydown', (e) => {
   }
 })();
 
-/* === TUNE SECTION LOGIC === */
+/* === TUNE SECTION LOGIC WITH LOCAL STORAGE === */
 const audioInput = document.getElementById('audioInput');
 const uploadedAudio = document.getElementById('uploadedAudio');
 const audioFileName = document.getElementById('audioFileName');
+const songDescription = document.getElementById('songDescription');
 
+const AUDIO_DATA_KEY = 'portfolioTuneAudioData_v1';
+const AUDIO_NAME_KEY = 'portfolioTuneAudioName_v1';
+const AUDIO_DESC_KEY = 'portfolioTuneAudioDesc_v1';
+
+/* Load stored audio + description on page load */
+function loadStoredAudio(){
+  try{
+    const audioData = localStorage.getItem(AUDIO_DATA_KEY);
+    const audioName = localStorage.getItem(AUDIO_NAME_KEY);
+    const desc = localStorage.getItem(AUDIO_DESC_KEY);
+
+    if(audioData){
+      uploadedAudio.src = audioData;
+      uploadedAudio.style.display = 'block';
+      audioFileName.textContent = 'Selected file: ' + (audioName || 'Saved tune');
+    }
+    if(desc){
+      songDescription.value = desc;
+    }
+  } catch(e){
+    console.warn('Error reading audio from localStorage', e);
+  }
+}
+loadStoredAudio();
+
+/* Save description as user types */
+songDescription.addEventListener('input', () => {
+  try{
+    localStorage.setItem(AUDIO_DESC_KEY, songDescription.value);
+  } catch(e){
+    console.warn('Error saving description', e);
+  }
+});
+
+/* Handle audio upload and save in localStorage */
 audioInput.addEventListener('change', (e) => {
   const file = e.target.files && e.target.files[0];
   if(!file) return;
@@ -889,10 +925,21 @@ audioInput.addEventListener('change', (e) => {
     return;
   }
 
-  const url = URL.createObjectURL(file);
-  uploadedAudio.src = url;
-  uploadedAudio.style.display = 'block';
-  audioFileName.textContent = 'Selected file: ' + file.name;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result; // base64 data URL
+    try{
+      localStorage.setItem(AUDIO_DATA_KEY, dataUrl);
+      localStorage.setItem(AUDIO_NAME_KEY, file.name);
+    } catch(err){
+      console.warn('Error saving audio to localStorage', err);
+      alert('Unable to save audio in browser storage. It may be too large.');
+    }
+    uploadedAudio.src = dataUrl;
+    uploadedAudio.style.display = 'block';
+    audioFileName.textContent = 'Selected file: ' + file.name;
+  };
+  reader.readAsDataURL(file);
 });
 </script>
 </body>
