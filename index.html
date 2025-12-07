@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kapil Kumar – Personal Portfolio</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  :root{
+    --bg1:#0f0c29;
+    --bg2:#302b63;
+    --bg3:#24243e;
+    --text:#fff;
+    --card-bg:rgba(255,255,255,0.12);
+    --accent:#ffd37b;
+  }
+  body.light{
+    --bg1:#f4f4f4;
+    --bg2:#fff;
+    --bg3:#ececec;
+    --text:#222;
+    --card-bg:rgba(0,0,0,0.05);
+    --accent:#222;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    transition:background 0.35s, color 0.35s;
+    min-height:100vh;
+  }
+
+  /* NAVBAR */
+  nav{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    z-index:1200;
+    backdrop-filter: blur(10px);
+    background:rgba(255,255,255,0.04);
+    gap:12px;
+  }
+  .brand{font-weight:700; font-size:20px}
+  .nav-links{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .nav-links a{
+    color:var(--text);
+    text-decoration:none;
+    font-size:15px;
+    padding:8px 10px;
+    border-radius:8px;
+    transition:all .18s;
+  }
+  .nav-links a:hover{ background:rgba(255,255,255,0.04); color:var(--accent) }
+
+  #modeSwitch{
+    cursor:pointer;
+    background:var(--accent);
+    color:#000;
+    border-radius:16px;
+    padding:8px 12px;
+    font-weight:700;
+    font-size:13px;
+  }
+
+  /* Mobile nav toggle */
+  .hamburger{
+    display:none;
+    font-size:20px;
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+
+  /* HERO */
+  .hero{
+    min-height:84vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:110px 20px 60px;
+  }
+  .hero-inner{
+    width:100%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:32px;
+    align-items:center;
+  }
+
+  /* Profile card */
+  .profile-card{
+    background:var(--card-bg);
+    padding:26px;
+    border-radius:18px;
+    box-shadow:0 6px 28px rgba(0,0,0,0.32);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+    position:relative;
+    overflow:visible;
+    transition:transform .45s cubic-bezier(.2,.9,.3,1),opacity .45s;
+  }
+
+  .profile-pic-wrap{
+    position:relative;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,0.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  img#profilePic{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform .6s ease;
+    user-select:none;
+    -webkit-user-drag:none;
+  }
+  .profile-pic-wrap:active img#profilePic{ transform:scale(0.98) }
+
+  /* small edit overlay */
+  .edit-overlay{
+    position:absolute;
+    right:6px;
+    bottom:6px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(90deg, rgba(0,0,0,0.45), rgba(255,255,255,0.02));
+    padding:6px;
+    border-radius:999px;
+    backdrop-filter: blur(6px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.25);
+  }
+  .edit-overlay button{
+    background:transparent;
+    border:none;
+    color:var(--text);
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .edit-overlay button:active{ transform:scale(.96) }
+
+  .edit-overlay.hidden { display:none; }
+
+  .name{
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+  }
+  .tagline{ text-align:center; color:rgba(255,255,255,0.85) }
+
+  /* Info column */
+  .intro{
+    padding:28px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.03);
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    justify-content:center;
+  }
+  .intro h1{ margin:0; font-size:28px }
+  .intro p{ margin:0; line-height:1.5; color:rgba(255,255,255,0.9) }
+
+  .social-row{ display:flex; gap:14px; margin-top:10px; align-items:center }
+  .social-row a{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:18px;
+    background:rgba(0,0,0,0.15);
+    color:var(--accent);
+  }
+
+  /* Sections */
+  section{ padding:60px 18px; }
+  .card{
+    max-width:1000px;
+    margin:12px auto;
+    background:var(--card-bg);
+    padding:28px;
+    border-radius:14px;
+    box-shadow:0 10px 36px rgba(0,0,0,0.28);
+  }
+  .card h2{ margin-top:0; font-size:22px }
+
+  /* Tune section styles */
+  .tune-item{
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:12px;
+    background:rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .tune-item label{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .tune-item input[type="file"]{
+    width:100%;
+    font-size:13px;
+  }
+  .tune-helper{
+    font-size:12px;
+    opacity:0.85;
+    margin-top:2px;
+  }
+  #audioFileName{
+    font-size:13px;
+    margin-top:4px;
+    opacity:0.9;
+  }
+  .tune-item audio{
+    width:100%;
+    margin-top:10px;
+    outline:none;
+  }
+  #songDescription{
+    width:100%;
+    min-height:70px;
+    resize:vertical;
+    padding:8px;
+    border-radius:8px;
+    border:none;
+    font-family:inherit;
+    font-size:14px;
+  }
+
+  /* footer */
+  footer{
+    text-align:center;
+    padding:28px 18px;
+    color:rgba(255,255,255,0.9);
+    background:rgba(255,255,255,0.03);
+  }
+
+  /* Chatbot */
+  #chatbot-btn{
+    position:fixed;
+    bottom:20px;
+    left:18px;
+    width:56px;
+    height:56px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    cursor:pointer;
+    background:var(--accent);
+    color:#000;
+    box-shadow:0 8px 28px rgba(0,0,0,0.3);
+    z-index:1200;
+  }
+  #chatbot-box{
+    position:fixed;
+    bottom:86px;
+    left:18px;
+    width:320px;
+    max-width:86vw;
+    background:var(--card-bg);
+    border-radius:12px;
+    display:none;
+    z-index:1200;
+    box-shadow:0 8px 30px rgba(0,0,0,0.36);
+    padding:12px;
+    max-height:420px;
+    overflow:auto;
+  }
+  .chat-msg{ margin:8px 0; font-size:14px }
+  .chat-msg.user{ text-align:right }
+  .chat-msg.bot{ color:var(--accent) }
+
+  .hidden-file{ display:none }
+  .btn{ display:inline-block; padding:10px 14px; background:var(--accent); color:#000; border-radius:10px; text-decoration:none; font-weight:700; }
+  .muted{ color:rgba(255,255,255,0.8) }
+
+  /* Full-screen preview overlay */
+  #full-screen-view{
+    position:fixed;
+    inset:0;
+    display:none;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.85);
+    cursor:zoom-out;
+  }
+  #full-screen-view.visible{ display:flex; }
+  #full-screen-view .full-img{
+    width:70vmin;
+    max-width:600px;
+    max-height:70vmin;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    object-fit:cover;
+    border:6px solid rgba(255,255,255,0.95);
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    background:#111;
+  }
+  #full-screen-view .close-x{
+    position:fixed;
+    top:28px;
+    right:28px;
+    background:rgba(0,0,0,0.5);
+    color:#fff;
+    border:none;
+    font-size:20px;
+    padding:8px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    z-index:2100;
+  }
+
+  @keyframes floaty{ 0%{ transform:translateY(0)} 50%{ transform:translateY(-10px)} 100%{ transform:translateY(0)} }
+  .profile-pic-wrap{ animation:floaty 4s ease-in-out infinite }
+
+  /* Responsive */
+  @media (max-width:980px){
+    .hero-inner{ grid-template-columns:1fr; gap:18px; padding:8px }
+    .profile-card{ flex-direction:row; gap:16px; padding:18px; align-items:center }
+    .profile-pic-wrap{ width:92px; height:92px; }
+    #full-screen-view .full-img{ width:56vmin; height:56vmin }
+    .intro{ padding:18px }
+    .tune-item{ background:rgba(0,0,0,0.14); }
+  }
+
+  @media (max-width:640px){
+    nav{ padding:10px }
+    .nav-links{ display:none; position:absolute; top:64px; right:10px; background:var(--card-bg); border-radius:12px; padding:10px; flex-direction:column; gap:6px; width:200px; box-shadow:0 10px 36px rgba(0,0,0,0.3) }
+    .hamburger{ display:inline-flex }
+    .hero{ padding-top:100px }
+    .profile-card{ padding:12px }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">Kapil Kumar</div>
+
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#tune">Tune</a>
+    <a href="#feedback">Feedback</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px">
+    <div id="modeSwitch">Light</div>
+    <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-inner">
+      <!-- PROFILE -->
+      <div class="profile-card" aria-label="profile card">
+        <div style="position:relative; display:flex; flex-direction:column; align-items:center; gap:12px;">
+          <div class="profile-pic-wrap" id="picWrap" aria-hidden="false" title="Profile picture (click to preview, long-press to edit)">
+            <img id="profilePic" alt="Profile picture" src="" draggable="false" />
+            <div class="edit-overlay" id="editOverlay" title="Edit profile photo">
+              <button id="uploadBtn" aria-label="Upload profile photo" title="Upload photo"><i class="fa-solid fa-camera"></i></button>
+              <button id="deleteBtn" aria-label="Delete profile photo" title="Delete photo"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+
+          <div style="text-align:center">
+            <div class="name">Kapil Kumar</div>
+            <div class="tagline">Hii, I am Kapil Kumar. Welcome to my portfolio...!</div>
+          </div>
+
+          <input class="hidden-file" id="fileInput" type="file" accept="image/*" />
+        </div>
+      </div>
+
+      <!-- INTRO -->
+      <div class="intro">
+        <h1>Hi, I'm Kapil</h1>
+        <p>I build web games, automation tools, AI assistants and mobile concepts. I enjoy clean design and smooth interactions. Browse the sections to see my work and contact details.</p>
+
+        <div class="social-row" aria-hidden="false">
+          <a href="https://www.instagram.com/k_a_p_i_l_y_d_v/?hl=en" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/+918053547261" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://t.me/code_with_pikachu" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+          <a href="https://github.com/anonymous-cmd-os" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="card">
+      <h2>About Me</h2>
+      <p>I enjoy building clean and smooth digital projects. I work on web games, automation tools, AI assistants and mobile concepts. I like learning fast and applying skills in real projects.</p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="card">
+      <h2>Skills</h2>
+      <p>• Web Development (HTML, CSS, JS) <br />
+         • UI / UX Design <br />
+         • Python + GPT AI Assistants <br />
+         • WiFi & Bluetooth Tooling <br />
+         • Automation and System Utilities</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="card">
+      <h2>Projects</h2>
+      <p><b>• Block Buzz Game</b> — A fast interactive web game.</p>
+      <p><b>• Steno Splash</b> — A clean interface shorthand learning platform.</p>
+      <p><b>• Jarvis Assistant</b> — Voice control, Hindi support, GPT, wake word.</p>
+      <p><b>• AirPods Popup APK</b> — iOS style animation with battery stats.</p>
+      <p><b>• WiFi Tool Device</b> — Pocket range analyzer and scanner.</p>
+    </div>
+  </section>
+
+  <!-- TUNE -->
+  <section id="tune">
+    <div class="card">
+      <h2>Tune</h2>
+      <p class="muted">Upload your own tune (MP3 / WAV) and write a short description about the song.</p>
+
+      <div class="tune-item">
+        <div>
+          <label for="audioInput"><i class="fa-solid fa-music"></i> Select your song file</label>
+          <input type="file" id="audioInput" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/wave" />
+          <div class="tune-helper">Supported formats: MP3, WAV</div>
+          <div id="audioFileName"></div>
+        </div>
+
+        <audio id="uploadedAudio" controls style="display:none;">
+          Your browser does not support the audio element.
+        </audio>
+
+        <div>
+          <label for="songDescription"><i class="fa-solid fa-pen"></i> Song description</label>
+          <textarea id="songDescription" placeholder="Write about this song... (vibe, story, dedication, etc.)"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEEDBACK -->
+  <section id="feedback">
+    <div class="card">
+      <h2>Feedback</h2>
+      <div class="stars" style="margin-bottom:12px">
+        <i class="fa-solid fa-star" data-star="1"></i>
+        <i class="fa-solid fa-star" data-star="2"></i>
+        <i class="fa-solid fa-star" data-star="3"></i>
+        <i class="fa-solid fa-star" data-star="4"></i>
+        <i class="fa-solid fa-star" data-star="5"></i>
+      </div>
+      <textarea placeholder="Write your feedback..." aria-label="feedback textarea"></textarea>
+      <div style="margin-top:12px"><button class="btn">Submit</button></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="card">
+      <h2>Contact</h2>
+      <p>Email: kapilsundrah2122@gmail.com</p>
+      <p>Instagram: k_a_p_i_l_y_d_v</p>
+      <p>Phone: +91 8053547261</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2025 Kapil Kumar<br />
+  <div style="margin-top:10px">
+    <a href="https://www.instagram.com/k_a_p_i_l_y_d_v/?hl=en" style="margin-right:10px"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/+918053547261" style="margin-right:10px"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://t.me/code_with_pikachu" style="margin-right:10px"><i class="fab fa-telegram"></i></a>
+    <a href="https://github.com/anonymous-cmd-os"><i class="fab fa-github"></i></a>
+  </div>
+</footer>
+
+<!-- CHATBOT -->
+<div id="chatbot-btn" title="Chat"><i class="fas fa-comment"></i></div>
+<div id="chatbot-box">
+  <div id="chatArea"><p class="chat-msg bot">Hello! How can I help you?</p></div>
+  <input id="chatInput" placeholder="Type a message..." style="width:100%; margin-top:8px; padding:8px; border-radius:8px; border:none" />
+</div>
+
+<!-- Full-screen preview markup -->
+<div id="full-screen-view" role="dialog" aria-hidden="true">
+  <button class="close-x" id="closeFull" aria-label="Close preview"><i class="fa-solid fa-xmark"></i></button>
+  <img src="" alt="Full preview" class="full-img" id="fullImg">
+</div>
+
+<script>
+/* Utility: default inline SVG avatar (data URL) */
+const DEFAULT_AVATAR = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#4b22b6"/><stop offset="1" stop-color="#2b6ad8"/></linearGradient></defs>
+  <rect width="100%" height="100%" fill="#0f1227"/>
+  <g transform="translate(56 48)">
+    <circle cx="200" cy="136" r="96" fill="url(#g)"/>
+    <rect x="24" y="264" width="352" height="160" rx="80" fill="rgba(255,255,255,0.03)"/>
+    <circle cx="200" cy="136" r="90" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+  </g>
+</svg>
+`);
+
+/* Elements */
+const profilePic = document.getElementById('profilePic');
+const fileInput = document.getElementById('fileInput');
+const uploadBtn = document.getElementById('uploadBtn');
+const deleteBtn = document.getElementById('deleteBtn');
+const editOverlay = document.getElementById('editOverlay');
+const picWrap = document.getElementById('picWrap');
+const storageKey = 'portfolioProfileImage_v1';
+
+const fullScreenView = document.getElementById('full-screen-view');
+const fullImg = document.getElementById('fullImg');
+const closeFull = document.getElementById('closeFull');
+
+/* State flags for press detection */
+let pressTimer = null;
+let longPressTriggered = false;
+const LONG_PRESS_MS = 600;
+
+/* Load profile image from localStorage */
+function loadProfileImage(){
+  try{
+    const stored = localStorage.getItem(storageKey);
+    if(stored){
+      profilePic.src = stored;
+      hideOverlayButtons();
+    } else {
+      profilePic.src = DEFAULT_AVATAR;
+      showUploadOnly();
+    }
+  } catch(e){
+    console.error('Could not access localStorage', e);
+    profilePic.src = DEFAULT_AVATAR;
+    showUploadOnly();
+  }
+}
+loadProfileImage();
+
+/* Overlay helpers */
+function showUploadOnly(){
+  editOverlay.classList.remove('hidden');
+  uploadBtn.style.display = 'inline-flex';
+  deleteBtn.style.display = 'none';
+}
+function hideOverlayButtons(){
+  editOverlay.classList.remove('hidden');
+  uploadBtn.style.display = 'none';
+  deleteBtn.style.display = 'none';
+}
+function revealOverlayButtons(){
+  editOverlay.classList.remove('hidden');
+  uploadBtn.style.display = 'inline-flex';
+  deleteBtn.style.display = 'inline-flex';
+}
+
+/* Upload flow */
+uploadBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  fileInput.click();
+});
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){
+    alert('Please upload an image file.');
+    fileInput.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      const dataUrl = ev.target.result;
+      resizeAndStoreImage(dataUrl, file.type, 800, 800).then(storableDataUrl => {
+        try{
+          localStorage.setItem(storageKey, storableDataUrl);
+        } catch(err){
+          console.warn('Saving to localStorage failed', err);
+          alert('Unable to save image to local storage. It may be full.');
+        }
+        profilePic.src = storableDataUrl;
+        hideOverlayButtons();
+      }).catch(err=>{
+        console.warn('Resize failed, using original', err);
+        try{ localStorage.setItem(storageKey, dataUrl); }catch(e){}
+        profilePic.src = dataUrl;
+        hideOverlayButtons();
+      });
+    } catch(err){ console.error(err) }
+  };
+  reader.readAsDataURL(file);
+  fileInput.value = '';
+});
+
+/* Delete profile image */
+deleteBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const ok = confirm('Delete profile photo? This will restore the default avatar.');
+  if(!ok) return;
+  try{ localStorage.removeItem(storageKey); } catch(e){ console.warn(e) }
+  profilePic.src = DEFAULT_AVATAR;
+  showUploadOnly();
+});
+
+/* Resize for storage */
+function resizeAndStoreImage(dataUrl, mimeType, maxWidth=800, maxHeight=800){
+  return new Promise((resolve, reject) => {
+    try{
+      const img = new Image();
+      img.onload = function(){
+        let {width, height} = img;
+        const ratio = Math.min(maxWidth/width, maxHeight/height, 1);
+        const w = Math.round(width * ratio);
+        const h = Math.round(height * ratio);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgba(0,0,0,0)';
+        ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img, 0, 0, w, h);
+        const outType = mimeType === 'image/png' ? 'image/png' : 'image/jpeg';
+        const compressed = canvas.toDataURL(outType, 0.86);
+        resolve(compressed);
+      };
+      img.onerror = reject;
+      img.src = dataUrl;
+    } catch(err){
+      reject(err);
+    }
+  });
+}
+
+/* LONG PRESS handling */
+function startPress(e){
+  if (e.target.closest('.edit-overlay') || e.target.closest('#full-screen-view')) return;
+  longPressTriggered = false;
+  clearTimeout(pressTimer);
+  pressTimer = setTimeout(() => {
+    longPressTriggered = true;
+    revealOverlayButtons();
+  }, LONG_PRESS_MS);
+}
+function endPress(){
+  clearTimeout(pressTimer);
+  if(longPressTriggered){
+    setTimeout(()=> { longPressTriggered = false; }, 50);
+  }
+}
+
+/* Mouse / touch for profile image */
+picWrap.addEventListener('mousedown', (e) => {
+  if(e.button !== 0) return;
+  startPress(e);
+});
+picWrap.addEventListener('mouseup', endPress);
+picWrap.addEventListener('mouseleave', endPress);
+picWrap.addEventListener('touchstart', (e) => { startPress(e); }, {passive: true});
+picWrap.addEventListener('touchend', endPress);
+
+/* Right-click to reveal */
+picWrap.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  revealOverlayButtons();
+});
+
+/* Full-screen preview */
+picWrap.addEventListener('click', (e) => {
+  if(e.target.closest('.edit-overlay')) return;
+  if(longPressTriggered) {
+    longPressTriggered = false;
+    return;
+  }
+  openFullScreenPreview(profilePic.src || DEFAULT_AVATAR);
+});
+function openFullScreenPreview(src){
+  fullImg.src = src || DEFAULT_AVATAR;
+  fullScreenView.classList.add('visible');
+  fullScreenView.setAttribute('aria-hidden', 'false');
+}
+function closeFullScreenPreview(){
+  fullScreenView.classList.remove('visible');
+  fullScreenView.setAttribute('aria-hidden', 'true');
+}
+fullScreenView.addEventListener('click', closeFullScreenPreview);
+fullImg.addEventListener('click', closeFullScreenPreview);
+closeFull.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFullScreenPreview();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closeFullScreenPreview();
+});
+
+/* Auto-hide overlay */
+let overlayAutoHideTimer = null;
+function scheduleOverlayAutoHide(){
+  clearTimeout(overlayAutoHideTimer);
+  overlayAutoHideTimer = setTimeout(() => {
+    const stored = localStorage.getItem(storageKey);
+    if(stored) hideOverlayButtons();
+    else showUploadOnly();
+  }, 8000);
+}
+const observerOverlay = new MutationObserver(() => {
+  if(uploadBtn.style.display !== 'none' || deleteBtn.style.display !== 'none'){
+    scheduleOverlayAutoHide();
+  } else {
+    clearTimeout(overlayAutoHideTimer);
+  }
+});
+observerOverlay.observe(editOverlay, { attributes: true, childList: true, subtree: true });
+
+/* Theme switch */
+const modeSwitch = document.getElementById('modeSwitch');
+modeSwitch.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  modeSwitch.textContent = document.body.classList.contains('light') ? 'Dark' : 'Light';
+});
+
+/* Stars feedback */
+document.querySelectorAll('.stars i').forEach(star => {
+  star.addEventListener('click', () => {
+    const rating = Number(star.dataset.star || 0);
+    document.querySelectorAll('.stars i').forEach((s, idx) => {
+      s.classList.toggle('active', idx < rating);
+    });
+  });
+});
+
+/* Chatbot */
+const chatBtn = document.getElementById('chatbot-btn');
+const chatBox = document.getElementById('chatbot-box');
+const chatInput = document.getElementById('chatInput');
+const chatArea = document.getElementById('chatArea');
+
+chatBtn.addEventListener('click', () => {
+  chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+  if(chatBox.style.display === 'block') chatInput.focus();
+});
+function botReply(text){
+  setTimeout(() => {
+    const p = document.createElement('p');
+    p.className = 'chat-msg bot';
+    p.innerText = text;
+    chatArea.appendChild(p);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }, 450);
+}
+function getAutoReply(text){
+  const t = (text || '').toLowerCase();
+  if(t.includes('hi') || t.includes('hello')) return "Hi there! Myself Robo... a smart personal assistant by Mr. Kapil";
+  if(t.includes('projects')) return "You can check my projects in the Projects section.";
+  if(t.includes('contact')) return "Email: kapilsundrah2122@gmail.com or Phone: 8053547261";
+  if(t.includes('help')) return "Tell me what you need help with.";
+  return "I am not sure about that, but I am learning!";
+}
+chatInput.addEventListener('keypress', function(e){
+  if(e.key === 'Enter' && chatInput.value.trim()){
+    const p = document.createElement('p');
+    p.className = 'chat-msg user';
+    p.innerText = chatInput.value;
+    chatArea.appendChild(p);
+    botReply(getAutoReply(chatInput.value));
+    chatInput.value = '';
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+});
+
+/* Card reveal animation */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.style.transform = 'translateY(0)';
+      entry.target.style.opacity = '1';
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.12});
+document.querySelectorAll('.card').forEach(c => {
+  c.style.opacity = '0';
+  c.style.transform = 'translateY(30px)';
+  observer.observe(c);
+});
+
+/* Mobile nav */
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  const shown = window.getComputedStyle(navLinks).display !== 'none' && navLinks.style.display === 'flex';
+  navLinks.style.display = shown ? 'none' : 'flex';
+});
+navLinks.querySelectorAll('a').forEach(a=>{
+  a.addEventListener('click', ()=> {
+    if(window.innerWidth <= 640) navLinks.style.display = 'none';
+  });
+});
+
+/* Fallback for profile image */
+profilePic.addEventListener('error', () => {
+  profilePic.src = DEFAULT_AVATAR;
+});
+
+/* Keyboard upload */
+uploadBtn.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' || e.key === ' ') fileInput.click();
+});
+
+/* Initial overlay state */
+(function initOverlayState(){
+  const stored = localStorage.getItem(storageKey);
+  if(stored){
+    hideOverlayButtons();
+  } else {
+    showUploadOnly();
+  }
+})();
+
+/* === TUNE SECTION LOGIC === */
+const audioInput = document.getElementById('audioInput');
+const uploadedAudio = document.getElementById('uploadedAudio');
+const audioFileName = document.getElementById('audioFileName');
+
+audioInput.addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+
+  const validTypes = ['audio/mpeg','audio/mp3','audio/wav','audio/x-wav','audio/wave'];
+  if(!validTypes.includes(file.type)){
+    alert('Please select an MP3 or WAV audio file.');
+    audioInput.value = '';
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+  uploadedAudio.src = url;
+  uploadedAudio.style.display = 'block';
+  audioFileName.textContent = 'Selected file: ' + file.name;
+});
+</script>
+</body>
+</html>
